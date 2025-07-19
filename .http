@@ -1,0 +1,285 @@
+
+@urls = https://api.themoviedb.org/3/discover/movie
+@generos= https://api.themoviedb.org/3/genre/movie/list
+
+@movieId=https://api.themoviedb.org/3/movie
+
+@generos=https://api.themoviedb.org/3/discover/movie?with_genres={idGeneros}
+
+###
+GET {{url}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YzkyODc1NzljNjNmNmMxMDhlZmNhM2RhYjc2Yzg2YyIsIm5iZiI6MTc0MTgxODg3MC4yNDg5OTk4LCJzdWIiOiI2N2QyMGJmNmE5N2M2NDZjYjU4MTA0NjMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.B54KOHQvINUHLNYKXCec3YIwQmJbdN1MK5F5BCJuolk
+Content-Type: application/json
+
+###
+GET {{movieId}}/950396
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YzkyODc1NzljNjNmNmMxMDhlZmNhM2RhYjc2Yzg2YyIsIm5iZiI6MTc0MTgxODg3MC4yNDg5OTk4LCJzdWIiOiI2N2QyMGJmNmE5N2M2NDZjYjU4MTA0NjMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.B54KOHQvINUHLNYKXCec3YIwQmJbdN1MK5F5BCJuolk
+Content-Type: application/json
+
+#####################################################################
+
+//@url = http://192.168.20.51:8000/api
+@url = http://127.0.0.1:8000/api
+//@url = https://tan-owl-223510.hostingersite.com/api
+@url2= "https://afternoon-brook-57512-4e3e1dbab78c.herokuapp.com/public/api/songs";
+@urlCategory = https://singer-api-main-rj5iu8.laravel.cloud/api/category
+
+
+###
+DELETE {{url}}/15
+Content-Type: application/json
+###
+GET {{url}}/songs
+Content-Type: application/json
+
+
+
+###
+GET {{url}}/search?query=sanidad
+Content-Type: application/json
+###
+GET {{url}}/category
+Content-Type: application/json
+
+#### 
+POST {{url}}/category
+Content-Type: application/json
+
+{
+   "name":"sanidad",
+   "image_url":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVlmWueUsfk-7eDhFEOyKZAUkQVLj2fpWqSw&s"
+}
+
+
+#### 
+PUT {{url}}/category/1
+Content-Type: application/json
+
+{
+   "name":"sanidades",
+   "image_url":"https://res.cloudinary.com/dlkky5xuo/image/upload/v1745663398/singerApi/eepvzorolmfsbo7dga0a.png"
+}
+
+####
+PUT {{url}}/1
+Content-Type: application/json
+
+{
+  "categories": [1] 
+}
+
+
+###
+GET {{url}}/songs
+Content-Type: application/json
+
+
+####
+POST {{url}}/songs
+Content-Type: application/json
+
+{
+    "name": "Busca Primero",
+    "autor": "Desconocido",
+    "song": [
+        {
+            "type": "Verso",
+            "lyrics": [
+                {
+                    "text": "Busca primero el Reino de Dios",
+                    "chords": ["C", "G", "Am", "Em"]
+                },
+                {
+                    "text": "Y toda su justicia",
+                    "chords": ["F", "C", "Gmaj7"]
+                },
+                {
+                    "text": "Y todo lo demás se os dará",
+                    "chords": ["C", "G", "Am", "Em"]
+                },
+                {
+                    "text": "Por añadidura",
+                    "chords": ["F", "C", "Gmaj7", "C"]
+                }
+            ]
+        },
+        {
+            "type": "Coro",
+            "lyrics": [
+                {
+                    "text": "Aleluya alelu, aleluya",
+                    "chords": ["C", "G", "Am", "Em"]
+                },
+                {
+                    "text": "Aaaleeeluuuuuya (Bis)",
+                    "chords": ["F", "C", "Gmaj7"]
+                },
+                {
+                    "text": "Aaaleeeluuuuuya",
+                    "chords": ["F", "C", "Gmaj7", "C"]
+                }
+            ]
+        }
+    ]
+}
+
+#####
+POST {{url}}/users
+Content-Type: application/json
+
+{
+    "name":"kevin",
+    "email":"kevin@gmail.com",
+    "password":"000000",
+    "profile_picture": "www.google.com"
+}
+
+#####
+GET {{url}}/users
+Content-Type: application/json
+
+#####
+GET {{url}}/user/3
+Content-Type: application/json
+Authorization: Bearer Bearer 9|8Z6qQ6kj4TJ3HVY8xQAI2v5Xaw15XMSrubibJmoU11cb168b
+
+
+
+#####
+POST {{url}}/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email":"kevin@gmail.com",
+    "password":"000000"
+}
+
+
+
+
+##### test password
+GET {{url}}/test-password
+Content-Type: application/json
+
+
+#####
+POST {{url}}/favorites/toggle
+Content-Type: application/json
+
+{   
+    "user_id":1,
+    "song_id":1,   
+}
+
+
+#####
+GET {{url}}/favorites?user_id=1
+Content-Type: application/json
+
+
+#####
+POST {{url}}/groups
+Content-Type: application/json
+Accept: application/json
+
+{   
+    "nombre": "hacedores de milagros",
+    "fecha": "2025-04-14",
+    "user_id": 2,
+    "members": ["kevin@gmail.com", "dumar@gmail.com"]
+}
+
+
+#####
+GET {{url}}/groups
+
+#####
+GET {{url}}/groups/4
+
+
+#####
+POST {{url}}/repertorios
+Content-Type: application/json
+Accept: application/json
+
+{
+    "nombre":"repertorio para campanha",
+    "group_id":1,
+    "fecha" : "2025-04-14"  
+}
+
+
+#####
+GET {{url}}/repertorios
+
+
+#####
+GET {{url}}/repertoriosongs
+
+
+#####
+POST {{url}}/repertoriosongs
+Content-Type: application/json
+Accept: application/json
+
+{
+    "repertorio_id": 5,
+    "song_id": 1,
+    "repertorio_song_category": 1
+}
+
+
+
+#####
+POST {{url}}/repertoriosongcategory
+Content-Type: application/json
+Accept: application/json
+
+{
+    "nombre": "alabanza",
+    "repertorio_id":1
+}
+
+#####
+GET {{url}}/repertoriosongcategory/1
+
+
+#####
+POST {{url}}/comentarios
+Content-Type: application/json
+Accept: application/json
+
+{
+    "user_id": 2,
+    "repertorio_id":1,
+    "contenido": "hola este es el tercer comentario 7"
+}
+
+
+###
+POST {{url}}/customSong
+Content-Type: application/json
+Accept: application/json
+
+{
+    "song_id": 2,                      
+    "repertorio_id": 5,                
+    "repertorio_song_category_id": 3,
+    "title": ""
+}
+
+###
+GET {{url}}/customSong/27
+###
+DELETE {{url}}/customSong/26
+
+
+###
+PUT {{url}}/customSong/27
+Content-Type: application/json
+Accept: application/json
+
+{
+   "title": "Version piano"
+}

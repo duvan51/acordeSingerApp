@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "acordeSingerApp",
+    "slug": "acordeSingerApp",
+    "owner": "duvana",
+    "version": "1.0.3",
+    "runtimeVersion": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "acordeSingerApp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "entryPoint": "./index.js",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "versionCode": 4,
+      "package": "com.duvana.acordeSingerApp",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "19120aab-4e5e-405b-a4b6-09e872e3ff67"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/19120aab-4e5e-405b-a4b6-09e872e3ff67"
+    },
+    "plugins": [
+      "expo-build-properties"
+    ]
+  }
+}
