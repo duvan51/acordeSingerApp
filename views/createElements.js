@@ -6,10 +6,8 @@ import axios from "axios";
 
 import { API_KEY_whisperEndpoint } from '@env'; // Asegúrate de tener configurado dotenv para acceder a las variables de entorno
 
-
 const apiKey = API_KEY_whisperEndpoint; // Tu clave de OpenAI
 const whisperEndpoint = 'https://api.openai.com/v1/audio/transcriptions';
-
 
 
 
