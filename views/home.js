@@ -50,7 +50,8 @@ export default function Home({ navigation }) {
           <View style={{ width: "100%", paddingHorizontal: 20 }}>
             <View
               style={{
-                backgroundColor: "#1c1b4b",
+               // backgroundColor: "#1c1b4b",
+                backgroundColor: "red",
                 borderRadius: 10,
                 paddingHorizontal: 10,
                 display: "flex",
