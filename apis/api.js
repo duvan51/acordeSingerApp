@@ -66,31 +66,30 @@ export const updateSong = async (id, data) => {
 
 export const getCategories = async () => {
   try {
-    const response = await axios.get(`${CloudPhp}/category`);
+    const url = `${CloudPhp}/category`;
+    console.log("🌐 Solicitando categorías desde:", url);
+
+    const response = await axios.get(url);
+    console.log("✅ Respuesta completa:", response);
+
     return response.data;
   } catch (error) {
     if (error.response) {
-      // El servidor respondió con un status distinto de 2xx
-      console.error("❌ Error de respuesta del servidor:");
-      console.error("Status:", error.response.status);
-      console.error("Data:", error.response.data);
+      console.error("❌ Error con respuesta:", error.response.status);
+      console.error("➡️ Datos:", error.response.data);
     } else if (error.request) {
-      // La petición fue hecha pero no hubo respuesta
-      console.error(
-        "❌ No hubo respuesta del servidor (Network error o CORS):"
-      );
-      console.error(error.request);
+      console.error("❌ No hubo respuesta del backend:", error.request);
     } else {
-      // Otro tipo de error
-      console.error("❌ Error al configurar la petición:", error.message);
+      console.error("❌ Error al hacer la petición:", error.message);
     }
-
-    // También puedes lanzar un error más claro para el frontend
-    throw new Error(
-      "No se pudieron obtener las categorías. Verifica la conexión o el backend."
-    );
+    throw error;
   }
 };
+
+
+
+
+
 
 export const createCategorie = async (data) => {
   try {

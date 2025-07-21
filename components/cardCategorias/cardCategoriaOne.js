@@ -7,20 +7,26 @@ const CardCategoriaOne = ({ filterWrite }) => {
   const [categoria, setCategoria] = useState({});
 
   useEffect(() => {
-    const fetchSongs = async () => {
-      try {
-        const categoria = await getCategories(); // Esperamos la respuesta
-        const selectCategoria = categoria.find(
-          (category) => category.name === filterWrite
-        );
-        setCategoria(selectCategoria); // Guardamos los datos en el estado
-      } catch (error) {
-        console.error("Error al obtener las canciones:", error);
-      }
-    };
+  if (!filterWrite) return; // No hacer nada si está vacío
 
-    fetchSongs();
-  }, []);
+  const fetchSongs = async () => {
+    try {
+      const categoria = await getCategories();
+      const selectCategoria = categoria.find(
+        (category) =>
+          category.name.trim().toLowerCase() === filterWrite.trim().toLowerCase()
+      );
+      setCategoria(selectCategoria);
+    } catch (error) {
+      console.error("Error al obtener las canciones:", error);
+    }
+  };
+
+  fetchSongs();
+}, [filterWrite]); // Ejecuta cuando `filterWrite` cambia
+
+
+
 
   const handleSelectSong = (song) => {
     navigation.navigate("SongViewId", { songId: song.id });
