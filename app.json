@@ -3,7 +3,7 @@
     "name": "acordeSingerApp",
     "slug": "acordeSingerApp",
     "owner": "duvana",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -17,7 +17,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 10,
+      "versionCode": 11,
       "package": "com.duvana.acordeSingerApp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
