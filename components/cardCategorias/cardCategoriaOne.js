@@ -28,7 +28,7 @@ const CardCategoriaOne = ({ filterWrite }) => {
 
 
 
-  console.log("categoria === >", categoria);
+  console.log("categorias === >", categoria);
 
 
 
