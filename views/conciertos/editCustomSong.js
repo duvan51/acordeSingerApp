@@ -22,7 +22,7 @@ import {
 import AntDesign from "react-native-vector-icons/AntDesign";
 
 const screenWidth = Dimensions.get("window").width;
-const EditCustomSong = ({ customSongId }) => {
+const EditCustomSong = ({ customSongId, onDeleted }) => {
   const [data, setData] = useState({});
   const [openModal6, setOpenModal6] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -63,15 +63,21 @@ const EditCustomSong = ({ customSongId }) => {
     setModalVisible(false);
   };
 
-  //llamar api custom song id
+
+
 
   useEffect(() => {
     if (customSongId != 0) {
       const fetchSongs = async () => {
         try {
-          const response = await getCustomSongById(customSongId); // Esperamos la respuesta
-          setData(response);
-          console.log("--->>>>", response); // Guardamos los datos en el estado
+          const response = await getCustomSongById(customSongId);
+         // console.log(response)
+
+          // Asegúrate de que lyrics exista y sea un string válido
+          const parsedLyrics = JSON.parse(response.lyrics);
+
+          // Agrega la propiedad "song" ya parseada
+          setData({ ...response, song: parsedLyrics });
         } catch (error) {
           console.error("Error al obtener la customSong:", error);
         }
@@ -80,15 +86,20 @@ const EditCustomSong = ({ customSongId }) => {
     }
   }, [customSongId]);
 
+
+
+
   const updatesong = async () => {
     const id = customSongId;
     try {
       const result = await UpdateCustomSong(id, data);
-      console.log("este es el resultado", result)
+     // console.log("este es el resultado", result);
     } catch (error) {
       console.log("error=>", error);
     }
-     {/**  */}
+    {
+      /**  */
+    }
   };
 
   const Transport = (modo) => {
@@ -139,80 +150,74 @@ const EditCustomSong = ({ customSongId }) => {
 
 
 
-
-
-
-
-  const DeletedModal = async  (id)=>{
+  const DeletedModal = async (id) => {
     try {
-      const product = await DeletedCustom(id)
-       console.log("este es el resultado", product )
-       setOpenModal6(false)
+      const product = await DeletedCustom(id);
+      //console.log("este es el resultado", product);
+      setOpenModal6(false);
+      if (onDeleted) {
+        setData(null);
+        onDeleted(id);
+      }
     } catch (error) {
       console.log("error=>", error);
     }
-  }
-    const DeletedProductModal = (customSongId) => {
-      return (
-        <Modal
-          visible={openModal6}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setOpenModal6(false)}
+  };
+
+  const DeletedProductModal = (customSongId) => {
+    return (
+      <Modal
+        visible={openModal6}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setOpenModal6(false)}
+      >
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
         >
           <View
             style={{
               width: "100%",
-              height: "100%",
-              justifyContent:"center",
-              alignItems: "center",
-              backgroundColor: "rgba(0,0,0,0.5)",
+              height: "30%",
+              backgroundColor: "white",
+
+              paddingHorizontal: 20,
+              paddingVertical: 20,
+              borderTopEndRadius: 20,
+              borderTopStartRadius: 20,
             }}
           >
-            <View
-              style={{
-                width: "100%",
-                height: "30%",
-                backgroundColor: "white",
-                
-                paddingHorizontal: 20,
-                paddingVertical: 20,
-                borderTopEndRadius: 20,
-                borderTopStartRadius: 20,
-              }}
+            {/* Botón de cerrar dentro del contenido */}
+            <TouchableOpacity
+              onPress={() => setOpenModal6(false)}
+              style={{ alignSelf: "flex-end", marginBottom: 10 }}
             >
-              {/* Botón de cerrar dentro del contenido */}
-              <TouchableOpacity
-                onPress={() => setOpenModal6(false)}
-                style={{ alignSelf: "flex-end", marginBottom: 10 }}
-              >
-                <AntDesign name="close" size={30} color="black" />
-              </TouchableOpacity>
-  
-              <View style={styles.container}>
-                <View>
-                  <Text>Deseas Eliminar esta custom ? </Text>
-                </View>
+              <AntDesign name="close" size={30} color="black" />
+            </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={()=> DeletedModal(customSongId)}
-                >
-                  <Text style={styles.buttonText}>Agregar</Text>
-                </TouchableOpacity>
-
-
-
+            <View style={styles.container}>
+              <View>
+                <Text>Deseas Eliminar esta version </Text>
               </View>
+
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => DeletedModal(customSongId)}
+              >
+                <Text style={styles.buttonText}>Eliminar</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-      );
-    };
-
-
-
-
+        </View>
+      </Modal>
+    );
+  };
 
   if (!customSongId) {
     return <Text>No se encontró la customSong</Text>;
@@ -221,11 +226,12 @@ const EditCustomSong = ({ customSongId }) => {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{flexDirection: "row", justifyContent:"flex-end" }}>
-            <Text style={{ marginRight: 8, fontSize:12 }}>Actualizada:</Text>
-            <Text style={{ fontSize:12 }}>{data.updated_at}</Text>
+        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+          <Text style={{ marginRight: 8, fontSize: 12 }}>Actualizada:</Text>
+
+          <Text style={{ fontSize: 12 }}>{data?.updated_at}</Text>
         </View>
-        <View style={{ flexDirection: "row", justifyContent:"flex-end" }}>
+        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
           <View style={{ marginRight: 8 }}>
             <Button title="Subir tono" onPress={() => Transport("subir")} />
           </View>
@@ -234,15 +240,15 @@ const EditCustomSong = ({ customSongId }) => {
           </View>
         </View>
 
-        {data?.lyrics?.map((section, sectionIndex) => (
+        {data?.song?.map((section, sectionIndex) => (
           <View key={sectionIndex} style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>{section.type}</Text>
 
             {section.lyrics.map((line, lineIndex) => {
-              const characters = line.text.split(""); // Separa todo, incluyendo espacios
+              const characters = line.text.split(""); // Separa cada carácter
               return (
                 <View key={lineIndex} style={styles.lineContainer}>
-                  {/* Línea de acordes (alineada con caracteres, incluyendo espacios) */}
+                  {/* Línea de acordes */}
                   <View style={styles.chordsRow}>
                     {characters.map((char, charIndex) => (
                       <TouchableOpacity
@@ -251,7 +257,7 @@ const EditCustomSong = ({ customSongId }) => {
                           addChord(sectionIndex, lineIndex, charIndex)
                         }
                         style={{
-                          minWidth: char === " " ? 8 : 10, // Espacios más pequeños para mejor alineación
+                          minWidth: char === " " ? 8 : 10,
                           alignItems: "center",
                         }}
                       >
@@ -262,7 +268,7 @@ const EditCustomSong = ({ customSongId }) => {
                     ))}
                   </View>
 
-                  {/* Línea de texto (incluyendo espacios) */}
+                  {/* Línea de texto */}
                   <View style={styles.lyricsRow}>
                     {characters.map((char, charIndex) => (
                       <TouchableOpacity
@@ -318,21 +324,12 @@ const EditCustomSong = ({ customSongId }) => {
           />
         </View>
 
-
-
-
         <View style={{}}>
-          <TouchableOpacity
-             onPress={() => setOpenModal6(true)}
-          > 
-            <Text>
-              Deleted Version
-            </Text>
+          <TouchableOpacity onPress={() => setOpenModal6(true)}>
+            <Text>Deleted Version</Text>
           </TouchableOpacity>
           {DeletedProductModal(customSongId)}
         </View>
-
-
       </ScrollView>
     </View>
   );
@@ -426,10 +423,8 @@ const styles = StyleSheet.create({
     minWidth: 1,
   },
 
-
-
-  //aqui viene la modal 
-   container: {
+  //aqui viene la modal
+  container: {
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 20,

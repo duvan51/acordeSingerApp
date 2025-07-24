@@ -103,6 +103,7 @@ const CreateRepertorio = ({groupId,  onRefresh}) => {
                 <TextInput
                   style={styles.input}
                   placeholder="nombre repertorio"
+                  placeholderTextColor="#888"
                   value={formData.nombre}
                   onChangeText={(value) =>
                     setFormData({ ...formData, nombre: value })
@@ -125,6 +126,7 @@ const CreateRepertorio = ({groupId,  onRefresh}) => {
                       padding: 5,
                     }}
                     placeholder="Correo"
+                    placeholderTextColor="#888"
                     value={ ""}
                     onChangeText={""}
                   />

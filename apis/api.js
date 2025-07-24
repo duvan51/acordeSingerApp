@@ -47,9 +47,9 @@ export const createSong = async (data) => {
 };
 
 export const updateSong = async (id, data) => {
-  console.log("data=> ", data, "id=>  ", id);
+ // console.log("data=> ", data, "id=>  ", id);
 
-  console.log("🌐 Llamando a:", `${CloudPhp}/category`);
+ // console.log("🌐 Llamando a:", `${CloudPhp}/category`);
 
   try {
     const response = await axios.put(`${CloudPhp}/songs/${id}`, {
@@ -67,10 +67,10 @@ export const updateSong = async (id, data) => {
 export const getCategories = async () => {
   try {
     const url = `${CloudPhp}/category`;
-    console.log("🌐 Solicitando categorías desde:", url);
+   // console.log("🌐 Solicitando categorías desde:", url);
 
     const response = await axios.get(url);
-    console.log("✅ Respuesta completa:", response);
+  //  console.log("✅ Respuesta completa:", response);
 
     return response.data;
   } catch (error) {
@@ -102,7 +102,7 @@ export const createCategorie = async (data) => {
   }
 };
 export const UpdateCategorie = async (id, data) => {
-  console.log("data=> ", data, "id=>  ", id);
+ // console.log("data=> ", data, "id=>  ", id);
   try {
     const response = await axios.put(`${CloudPhp}/category/${id}`, data);
     return response;
@@ -164,8 +164,8 @@ export const createUser = async (data) => {
 };
 
 export const getUserById = async (id, token) => {
-  console.log("idUser  => ", id);
-  console.log("token id=> ", token);
+  //console.log("idUser  => ", id);
+ // console.log("token id=> ", token);
   try {
     const response = await axios.get(`${CloudPhp}/user/${id}`, {
       headers: {
@@ -217,13 +217,14 @@ export const createRepertorio = async (data) => {
 export const getRepertorioId = async (id) => {
   try {
     const response = await axios.get(`${CloudPhp}/repertorios/${id}`);
-    // console.log("reperotrio desde api ----> :", response.data);
+     console.log("reperotrio desde api ----> :", response.data);
     return response.data;
   } catch (error) {
     console.error("Error el repertorio:", error);
     throw error;
   }
 };
+
 
 export const getRepertorioSongCategoryId = async (id) => {
   try {
@@ -237,7 +238,6 @@ export const getRepertorioSongCategoryId = async (id) => {
     throw error;
   }
 };
-
 export const createRepertorioSongCategory = async (data) => {
   try {
     const response = await axios.post(
@@ -251,8 +251,26 @@ export const createRepertorioSongCategory = async (data) => {
     throw error;
   }
 };
+export const DeletedRepertorioSongCategory= async (id) => {
+  try {
+    const response = await axios.delete(`${CloudPhp}/repertoriosongcategory/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
+
+
+
+
+
+
 
 export const createComentarios = async (data) => {
+ // console.log("data desde api => ", data);
   try {
     const response = await axios.post(`${CloudPhp}/comentarios`, data);
     // console.log("este es el response=> ",response.data)
@@ -262,6 +280,7 @@ export const createComentarios = async (data) => {
     throw error;
   }
 };
+
 
 // custom song
 export const getCustomSongById = async (id) => {

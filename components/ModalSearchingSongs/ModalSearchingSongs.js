@@ -58,9 +58,6 @@ const ModalSearchingSong = ({songSelect}) => {
   //console.log("------>", songs[0].id)
 
 
-
-
-
   
   useEffect(() => {
     const fetchSongs = async () => {

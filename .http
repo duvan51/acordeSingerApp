@@ -18,8 +18,8 @@ Content-Type: application/json
 
 #####################################################################
 
-//@url = http://192.168.20.51:8000/api
-@url = http://127.0.0.1:8000/api
+//@url = http://192.168.20.51:8000/api /songs
+@url = https://api.musikoord.com/api
 //@url = https://tan-owl-223510.hostingersite.com/api
 @url2= "https://afternoon-brook-57512-4e3e1dbab78c.herokuapp.com/public/api/songs";
 @urlCategory = https://singer-api-main-rj5iu8.laravel.cloud/api/category
@@ -71,6 +71,10 @@ Content-Type: application/json
 
 ###
 GET {{url}}/songs
+Content-Type: application/json
+
+####
+DELETE  {{url}}/songs/1
 Content-Type: application/json
 
 

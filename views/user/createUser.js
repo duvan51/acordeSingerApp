@@ -61,18 +61,21 @@ const CreateUser = () => {
                     <TextInput
                 style={styles.input}
                 placeholder="Name"
+                placeholderTextColor="#888"
                 value={formData.name}
                 onChangeText={(value) => setFormData({ ...formData, name: value })}
                 />
                     <TextInput
                 style={styles.input}
                 placeholder="Correo"
+                placeholderTextColor="#888"
                 onChangeText={(value) => setFormData({ ...formData, email: value })}
                 value={formData.email}
                 />
                     <TextInput
                  style={styles.input}
                  placeholder="Contraseña"
+                 placeholderTextColor="#888"
                  value={formData.password}
                  onChangeText={(value) => setFormData({ ...formData, password: value })}
                  secureTextEntry
@@ -81,6 +84,7 @@ const CreateUser = () => {
                     <TextInput
                  style={styles.input}
                  placeholder="Image perfil"
+                 placeholderTextColor="#888"
                  onChangeText={(value) => setFormData({ ...formData, profile_picture: value })}
                  value={formData.profile_picture}
                  secureTextEntry

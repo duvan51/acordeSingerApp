@@ -9,6 +9,7 @@ import {
   Button,
   TouchableOpacity,
   Modal,
+  Alert
 } from "react-native";
 
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -18,7 +19,7 @@ import Feather from "react-native-vector-icons/Feather";
 
 import {createRepertorioSongCategory} from "../../apis/api"
 
-const CreateRepertorySongCat = ({idRepertorio,  onRefresh}) => {
+const CreateRepertorySongCat = ({idRepertorio,  onRefresh, reloadRepertorio,fetchRepertorios}) => {
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
    const [openModal, setOpenModal] = useState(false);
 
@@ -38,13 +39,13 @@ const CreateRepertorySongCat = ({idRepertorio,  onRefresh}) => {
 
     const handleCreateRepertorio = async () => {
         try {
-          const data = await  createRepertorioSongCategory(formData);
-          //console.log("Repetrtorio Creado:", data);
-          setTimeout(() => {
-            if (onRefresh) onRefresh(); // Llama la función del padre para recargar datos
+          const data = await createRepertorioSongCategory(formData);
+            //fetchRepertorios(); 
+             if (reloadRepertorio) reloadRepertorio(); 
             setOpenModal(false);
-          }, 500);
-         setFormData({ ...formData, nombre: "", repertorio_id:0});
+            if (onRefresh) onRefresh();
+
+          setFormData({ ...formData, nombre: "", repertorio_id: 0 });
         } catch (error) {
           console.error(error.response?.data || error.message);
           Alert.alert("Error", "Algo salio mal");
@@ -75,6 +76,7 @@ const CreateRepertorySongCat = ({idRepertorio,  onRefresh}) => {
           >
             <AntDesign name="close" size={30} color="white" />
           </TouchableOpacity>
+          
           <View
             style={{
               width: "100%",
@@ -122,8 +124,8 @@ const CreateRepertorySongCat = ({idRepertorio,  onRefresh}) => {
           gap: 2,
         }}
       >
-        <Feather name="edit" size={15} color="white" />
-        <Text style={{color:"white"}}>
+        <Feather name="edit" size={15} color="black" />
+        <Text style={{color:"black"}}>
             Agregar
         </Text>
       </TouchableOpacity>

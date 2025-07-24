@@ -27,8 +27,6 @@ const Repertorios = ({data}) => {
 
 
 
-
-
     const fetchRepertorios = async () => {
       try {
         const repertorios = await getRepertorioId(data.id); 
@@ -51,7 +49,7 @@ const Repertorios = ({data}) => {
                 paddingVertical: 20,
                 backgroundColor: "white",
                 paddingHorizontal: 20,
-                marginBottom:40,
+                marginBottom: 20,
                 borderRadius: 10
               }}
             >
@@ -68,7 +66,7 @@ const Repertorios = ({data}) => {
     
                     {/**ver el concierto */}
                     <TouchableOpacity 
-                      onPress={() => navigation.navigate("ConciertoView",{repertorio})
+                      onPress={() => navigation.navigate("ConciertoView", { idRepertorio: repertorio.id })
                     }>
                         <View><Text>View Concierto</Text></View>
                     </TouchableOpacity>

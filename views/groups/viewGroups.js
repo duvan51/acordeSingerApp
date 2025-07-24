@@ -48,33 +48,37 @@ const ViewGroups = ({ navigation }) => {
     }));
   }, [emails, userId, fechaActual]);
 
+  const getUserId = async () => {
+    const id = await AsyncStorage.getItem("@userId");
+    const token = await AsyncStorage.getItem("@userToken");
+    if (id) {
+      setUserId(id);
+      const dataUser = await getUserById(id, token);
+      setDataGroups(dataUser.groups);
+      // console.log("esto es la data del user=>", dataUser)
+    }
+  };
+
+  // 2. MODIFICAR EL useEffect
+  useEffect(() => {
+    getUserId();
+  }, []);
+
+  // 3. ACTUALIZAR CreateGroups PARA QUE ACTUALICE LOS GRUPOS
   const CreateGroups = async () => {
     try {
       const data = await createGroups(formData);
-     // console.log("✅ Token:", data);
       setOpenModal(false);
       setEmails([]);
       setFormData({ ...formData, nombre: "", profile_picture: "" });
-      // Aquí puedes guardar token o navegar
+
+      // 👉 Volver a cargar los grupos
+      await getUserId();
     } catch (error) {
       console.error(error.response?.data || error.message);
       Alert.alert("Error", "Credenciales incorrectas");
     }
   };
-
-  useEffect(() => {
-    const getUserId = async () => {
-      const id = await AsyncStorage.getItem("@userId");
-      const token = await AsyncStorage.getItem("@userToken");
-      if (id) {
-        setUserId(id);
-        const dataUser = await getUserById(id, token);
-        setDataGroups(dataUser.groups);
-        /*console.log("esto es la data del user=>", dataUser) */
-      }
-    };
-    getUserId();
-  }, []);
 
   //aqui vamos a agregar los correos al estado
   const handleEmails = (text) => {
@@ -89,9 +93,6 @@ const ViewGroups = ({ navigation }) => {
     }
   };
 
-
-
-  
   const CreateGroup = () => {
     return (
       <Modal
@@ -124,6 +125,7 @@ const ViewGroups = ({ navigation }) => {
               paddingVertical: 20,
               borderTopEndRadius: 20,
               borderTopStartRadius: 20,
+              
             }}
           >
             <View style={styles.container}>
@@ -135,6 +137,7 @@ const ViewGroups = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   placeholder="nombre"
+                  placeholderTextColor="#888"
                   value={formData.nombre}
                   onChangeText={(value) =>
                     setFormData({ ...formData, nombre: value })
@@ -157,6 +160,7 @@ const ViewGroups = ({ navigation }) => {
                       padding: 5,
                     }}
                     placeholder="Correo"
+                    placeholderTextColor="#888"
                     value={inputEmail}
                     onChangeText={handleEmails}
                   />
@@ -214,6 +218,7 @@ const ViewGroups = ({ navigation }) => {
                 <TextInput
                   style={styles.input}
                   placeholder="Image perfil"
+                  placeholderTextColor="#888"
                   onChangeText={(value) =>
                     setFormData({ ...formData, profile_picture: value })
                   }
@@ -248,6 +253,7 @@ const ViewGroups = ({ navigation }) => {
             flexDirection: "row",
             width: "100%",
             justifyContent: "space-between",
+            
           }}
         >
           <View>
@@ -259,8 +265,7 @@ const ViewGroups = ({ navigation }) => {
           {CreateGroup()}
         </View>
 
-        <View style={{ flex: 1, flexDirection: "column", gap: 20 }}>
-          
+        <View style={{ flex: 1, flexDirection: "column", gap: 20, marginBottom: 80 }}>
           {dataGroups.map((x) => (
             <TouchableOpacity
               key={x.id}
@@ -282,85 +287,84 @@ const ViewGroups = ({ navigation }) => {
 
                 <View style={{ flex: 1, flexDirection: "column" }}>
                   {/* Tarjeta 1 */}
-                  {x?.repertorios?.map((repertorio)=>(
-                   // console.log(repertorio),
+                  {x?.repertorios?.map((repertorio) => (
+                    // console.log(repertorio),
                     <View
-                    key={repertorio.id}
-                    style={{
-                      backgroundColor: "#f2f2f2",
-                      paddingHorizontal: 10,
-                      paddingVertical: 10,
-                      borderRadius: 10,
-                      marginBottom: 10,
-                    }}
-                  >
-                    <View>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          width: "100%",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <View>
-                          <Text style={{ fontWeight: "800" }}>
-                            {repertorio.nombre}
-                          </Text>
-                          <Text>{repertorio.fecha}</Text>
+                      key={repertorio.id}
+                      style={{
+                        backgroundColor: "#f2f2f2",
+                        paddingHorizontal: 10,
+                        paddingVertical: 10,
+                        borderRadius: 10,
+                        marginBottom: 10,
+                      }}
+                    >
+                      <View>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            width: "100%",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <View>
+                            <Text style={{ fontWeight: "800" }}>
+                              {repertorio.nombre}
+                            </Text>
+                            <Text>{repertorio.fecha}</Text>
+                          </View>
+                          <View>
+                            <Ionicons
+                              name="notifications"
+                              size={30}
+                              color="black"
+                            />
+                          </View>
                         </View>
-                        <View>
-                          <Ionicons
-                            name="notifications"
-                            size={30}
+
+                        <View
+                          style={{
+                            width: "100%",
+                            borderBottomWidth: 2,
+                            borderColor: "white",
+                            marginVertical: 10,
+                          }}
+                        />
+
+                        <View style={{ width: "100%" }}>
+                          <View style={{ marginBottom: 2 }}>
+                            <Text style={{ fontSize: 10 }}>
+                              Kevin ha publicado
+                            </Text>
+                          </View>
+                          <View>
+                            <Text style={{ fontSize: 10 }}>
+                              dumar ha grabado un audio
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View
+                          style={{
+                            width: "100%",
+                            flexDirection: "row",
+                            justifyContent: "flex-end",
+                            alignItems: "center",
+                            marginTop: 5,
+                          }}
+                        >
+                          <AntDesign
+                            name="clockcircleo"
+                            size={15}
                             color="black"
                           />
-                        </View>
-                      </View>
-
-                      <View
-                        style={{
-                          width: "100%",
-                          borderBottomWidth: 2,
-                          borderColor: "white",
-                          marginVertical: 10,
-                        }}
-                      />
-
-                      <View style={{ width: "100%" }}>
-                        <View style={{ marginBottom: 2 }}>
-                          <Text style={{ fontSize: 10 }}>
-                            Kevin ha publicado
+                          <Text style={{ fontSize: 10, marginLeft: 5 }}>
+                            faltan 3 días
                           </Text>
                         </View>
-                        <View>
-                          <Text style={{ fontSize: 10 }}>
-                            dumar ha grabado un audio
-                          </Text>
-                        </View>
-                      </View>
-
-                      <View
-                        style={{
-                          width: "100%",
-                          flexDirection: "row",
-                          justifyContent: "flex-end",
-                          alignItems: "center",
-                          marginTop: 5,
-                        }}
-                      >
-                        <AntDesign
-                          name="clockcircleo"
-                          size={15}
-                          color="black"
-                        />
-                        <Text style={{ fontSize: 10, marginLeft: 5 }}>
-                          faltan 3 días
-                        </Text>
                       </View>
                     </View>
-                  </View>
-
                   ))}
                   {/* Tarjeta 2 */}
                   <View
@@ -437,7 +441,6 @@ const ViewGroups = ({ navigation }) => {
                       </View>
                     </View>
                   </View>
-
                 </View>
               </View>
             </TouchableOpacity>
@@ -453,6 +456,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
+    color: "red",
   },
   title: {
     fontSize: 24,
@@ -467,6 +471,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 12,
     borderRadius: 6,
+    color: "black",
   },
   button: {
     backgroundColor: "#007AFF",

@@ -16,28 +16,27 @@ const AddVersionModal = ({
   repertorioID,
   repertorioSongCategoryId,
   customSongID,
+    fetchRepertorios
 }) => {
   const [openModal5, setOpenModal5] = useState(false); //abrir modal para escoger canciones
   const [formData, setFormData] = useState({});
-  const [songOriginal, setSongOriginal] = useState({})
+  const [songOriginal, setSongOriginal] = useState({});
 
   useEffect(() => {
-  const fetchCustomSong = async () => {
-    try {
-      const customSong = await getCustomSongById(customSongID);
-      setSongOriginal(customSong);
-     // console.log("custom Song ===> ", customSong)
-    } catch (error) {
-      console.error("Error al obtener el repertorio:", error);
+    const fetchCustomSong = async () => {
+      try {
+        const customSong = await getCustomSongById(customSongID);
+        setSongOriginal(customSong);
+        // console.log("custom Song ===> ", customSong)
+      } catch (error) {
+        console.error("Error al obtener el repertorio:", error);
+      }
+    };
+
+    if (customSongID) {
+      fetchCustomSong();
     }
-  };
-
-  if (customSongID) {
-    fetchCustomSong();
-  }
-}, [customSongID]);
-
-
+  }, [customSongID]);
 
   useEffect(() => {
     setFormData((prev) => ({
@@ -45,20 +44,27 @@ const AddVersionModal = ({
       repertorio_id: repertorioID,
       song_id: songOriginal.original_song_id,
       repertorio_song_category_id: songOriginal.repertorio_song_category_id,
-      title: ""
+      title: "",
+      key: "",
     }));
   }, [songOriginal]);
 
   const handleCreateRepertorio = async () => {
     try {
       const data = await createCustomSong(formData);
-      //console.log("Custom creada", formData);
+      console.log("Custom creada", formData);
+
+      setOpenModal5(false); // Cierra el modal
+      if (fetchRepertorios) {
+        fetchRepertorios(repertorioSongCategoryId); // Recarga el listado en el padre
+      }
+      setFormData({}); // Limpia el formulario
     } catch (error) {
       console.error(error.response?.data || error.message);
     }
   };
 
- // console.log(formData)
+  // console.log(formData)
 
   const modal = () => {
     return (
@@ -108,6 +114,16 @@ const AddVersionModal = ({
                   value={formData.title}
                   onChangeText={(value) =>
                     setFormData({ ...formData, title: value })
+                  }
+                />
+              </View>
+              <View>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Comentario (opcional)"
+                  value={formData.key || ""}
+                  onChangeText={(value) =>
+                    setFormData({ ...formData, key: value })
                   }
                 />
               </View>

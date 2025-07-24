@@ -152,7 +152,7 @@ const ViewGroupId = ({ navigation }) => {
         {/* fin  de cabecera */}
 
         {/* inicio de POSTS */}
-        <View style={{width:"100%", alignItems: "center"}}>
+        <View style={{width:"100%", alignItems: "center", marginBottom: 80}}>
           {
             group?.repertorios?.map((x)=>(
               <Repertorios key={x.id} data={x} />

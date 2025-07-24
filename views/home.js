@@ -35,7 +35,7 @@ export default function Home({ navigation }) {
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginBottom: 10 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
