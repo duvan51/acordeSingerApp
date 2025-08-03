@@ -30,6 +30,7 @@ const ConviertoSongViewId = ({ navigation }) => {
   const [dataCustomSong, setDataCustomSong] = useState([]);
   const [versionesCustomSong, setVersionesCustomSong] = useState([]);
   const [songCustomId, setSongCustomId] = useState(0);
+  const [showSongSelector, setShowSongSelector] = useState(false);
 
   const [formData, setFormData] = useState({});
   const [repertorioIdSong, setIdRepertorioSong] = useState(0);
@@ -62,7 +63,6 @@ const ConviertoSongViewId = ({ navigation }) => {
     try {
       const customSong = await getRepertorioSongCategoryId(id);
       setDataCustomSong(customSong);
-      //console.log("Custom Song ===> ", customSong);
     } catch (error) {
       console.error("Error al obtener el repertorio:", error);
     }
@@ -103,14 +103,15 @@ const ConviertoSongViewId = ({ navigation }) => {
         setFirstList(repertorio.repertorio_song_category[0].id);
       }
       // Segundo listado
-      setSecondtList(dataCustomSong.custom_songs[0].original_song_id);
+      const firstSong = dataCustomSong.custom_songs[0];
+      setSecondtList(firstSong.original_song_id);
 
-      // Tercer listado
-      const firstVersion = dataCustomSong.custom_songs[0].versiones?.[0];
+      // Tercer listado - siempre seleccionar el primero si existe
+      const firstVersion = firstSong.versiones?.[0];
       if (firstVersion) {
         setThreeList(firstVersion.id);
         setSongCustomId(firstVersion.id);
-        setVersionesCustomSong(dataCustomSong.custom_songs[0].versiones);
+        setVersionesCustomSong(firstSong.versiones);
       } else {
         setThreeList(null);
         setSongCustomId(0);
@@ -148,7 +149,6 @@ const ConviertoSongViewId = ({ navigation }) => {
       formData.repertorio_song_category_id
     ) {
       handleCreateSong();
-      //console.log("vamos a crear el custom")
     }
   }, [formData]);
 
@@ -161,6 +161,10 @@ const ConviertoSongViewId = ({ navigation }) => {
       console.error(error.response?.data || error.message);
       Alert.alert("Error", "al agregar la cancion");
     }
+  };
+
+  const toggleSongSelector = () => {
+    setShowSongSelector(!showSongSelector);
   };
 
   return (
@@ -201,7 +205,6 @@ const ConviertoSongViewId = ({ navigation }) => {
                 setRepertorySongCategoryId(id) && setFirstList(id)
               }
               repertorioID={repertorio?.id ?? 0}
-              //fetchRepertorios={fetchRepertorios}
               reloadRepertorio={reloadRepertorio}
             />
           </View>
@@ -229,6 +232,14 @@ const ConviertoSongViewId = ({ navigation }) => {
                     onPress={() => {
                       setVersionesCustomSong(z?.versiones ?? []);
                       setSecondtList(z.original_song_id);
+                      // Seleccionar automáticamente la primera versión si existe
+                      if (z?.versiones?.length > 0) {
+                        setThreeList(z.versiones[0].id);
+                        setSongCustomId(z.versiones[0].id);
+                      } else {
+                        setThreeList(null);
+                        setSongCustomId(0);
+                      }
                     }}
                     style={[
                       styles.listBtnWhite,
@@ -303,7 +314,6 @@ const ConviertoSongViewId = ({ navigation }) => {
 
               {/* Botón de agregar versión, fuera del scroll */}
               <TouchableOpacity
-                onPress={() => {}}
                 style={{
                   backgroundColor: "#444",
                   borderRadius: 8,
@@ -323,13 +333,49 @@ const ConviertoSongViewId = ({ navigation }) => {
             </View>
           </View>
 
-          <EditCustomSong
-            customSongId={songCustomId}
-            onDeleted={(idEliminado) => {
-              setSongCustomId(0);
-              fetchRepertorios(repertorioIdSong);
-            }}
-          />
+          <View style={{ position: "relative" }}>
+            <EditCustomSong
+              customSongId={songCustomId}
+              onDeleted={(idEliminado) => {
+                setSongCustomId(0);
+                fetchRepertorios(repertorioIdSong);
+              }}
+            />
+
+            {/* Botón flotante para cambiar canciones */}
+            {showSongSelector && (
+              <View style={styles.songSelectorContainer}>
+                <ScrollView style={styles.songSelectorScroll}>
+                  {dataCustomSong?.custom_songs?.map((z) => (
+                    <TouchableOpacity
+                      key={z.original_song_id}
+                      onPress={() => {
+                        setVersionesCustomSong(z?.versiones ?? []);
+                        setSecondtList(z.original_song_id);
+                        setShowSongSelector(false);
+                      }}
+                      style={styles.songSelectorItem}
+                    >
+                      <Text style={styles.songSelectorText}>
+                        <NameOriginal x={z.original_song_id} />
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+
+            <TouchableOpacity
+              onPress={toggleSongSelector}
+              style={styles.floatingButton}
+            >
+              <FontAwesome
+                name={showSongSelector ? "times" : "exchange"}
+                size={20}
+                color="white"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -433,5 +479,45 @@ const styles = StyleSheet.create({
     borderBottomColor: "#072042",
     fontWeight: "600",
   },
+  floatingButton: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    backgroundColor: "#072042",
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+    zIndex: 100,
+  },
+  songSelectorContainer: {
+    position: "absolute",
+    right: 20,
+    bottom: 80,
+    backgroundColor: "white",
+    width: 200,
+    maxHeight: 300,
+    borderRadius: 10,
+    padding: 10,
+    elevation: 5,
+    zIndex: 99,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  songSelectorScroll: {
+    maxHeight: 280,
+  },
+  songSelectorItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  songSelectorText: {
+    color: "#072042",
+    fontSize: 14,
+  },
 });
+
 export default ConviertoSongViewId;

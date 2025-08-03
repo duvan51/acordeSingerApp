@@ -10,7 +10,7 @@ const NameOriginal = ({ x }) => {
       try {
         const response = await getSongById(x); // 👈 Aquí usamos await
         setSongName(response.name); // o response.id si quieres eso
-        console.log("Nombre de la canción:", response);
+       // console.log("Nombre de la canción:", response);
       } catch (error) {
         console.log(error);
       }

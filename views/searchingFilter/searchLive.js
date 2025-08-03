@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import SearchInput from "../../components/input/searchInput";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -82,21 +83,23 @@ const SearchLive = () => {
 
 
   return (
-    <View style={{ paddingTop: 20, paddingHorizontal: 10 }}>
+     <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 10 }}>
+      {/* Header */}
       <View
         style={{
           flexDirection: "row",
           width: "100%",
           height: 80,
-          borderBottom: 1,
-          borderBottomColor: "black",
+          borderBottomWidth: 1,
+          borderBottomColor: "#e0e0e0",
+          marginBottom: 10,
         }}
       >
         <View
           style={{
             width: "15%",
-            height: "100%",
             justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -104,17 +107,25 @@ const SearchLive = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ width: "85%", height: "100%" }}>
+        <View style={{ width: "85%", justifyContent: "center" }}>
           <SearchInput onSearch={searchSongs} categoryProp={categoryProp} />
         </View>
       </View>
 
-      <View>
-        {loading && <ActivityIndicator size="large" color="blue" />}
+      {/* Content with scroll */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {loading && (
+          <ActivityIndicator
+            size="large"
+            color="blue"
+            style={{ marginVertical: 20 }}
+          />
+        )}
 
         {results.length > 0 ? (
           <FlatList
             data={results}
+            scrollEnabled={false}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -132,6 +143,7 @@ const SearchLive = () => {
                     width: "10%",
                     justifyContent: "center",
                     alignItems: "center",
+                    height: 20,
                   }}
                 >
                   <FontAwesome name="search" size={13} color="black" />
@@ -150,18 +162,23 @@ const SearchLive = () => {
             )}
           />
         ) : (
-          <View>
-            <Text>No hay datos</Text>
-          </View>
+          <Text style={{ paddingVertical: 10, textAlign: "center" }}>
+            No hay datos
+          </Text>
         )}
 
-        <View style={{ 
-          marginTop: 20,
-          borderTopWidth: 2, 
-          borderTopColor: '#ffffff'
-        }}>
+        {/* Canciones Sugeridas */}
+        <View
+          style={{
+            marginTop: 20,
+            borderTopWidth: 2,
+            borderTopColor: "#ffffff",
+            paddingTop: 10,
+          }}
+        >
           <FlatList
             data={songs}
+            scrollEnabled={false}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handleSelectSong(item)}>
@@ -177,43 +194,31 @@ const SearchLive = () => {
                     <Text style={{ fontSize: 16 }}>{item.name}</Text>
                     <Text style={{ color: "gray" }}>{item.autor}</Text>
                   </View>
-                  {item.song[0]?.lyrics[0]?.chords[0] ? (
-                    <View
-                      style={{
-                        width: "20%",
-                        height: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
+                  <View
+                    style={{
+                      width: "20%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {item.song?.[0]?.lyrics?.[0]?.chords?.[0] ? (
                       <Text style={{ fontSize: 20 }}>
                         {item.song[0].lyrics[0].chords[0]}
                       </Text>
-                    </View>
-                  ) : (
-                    <View
-                      style={{
-                        width: "20%",
-                        height: "100%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text style={{ fontSize: 20 }}>
-                        <FontAwesome
-                          name="question-circle"
-                          size={24}
-                          color="black"
-                        />
-                      </Text>
-                    </View>
-                  )}
+                    ) : (
+                      <FontAwesome
+                        name="question-circle"
+                        size={24}
+                        color="black"
+                      />
+                    )}
+                  </View>
                 </View>
               </TouchableOpacity>
             )}
           />
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

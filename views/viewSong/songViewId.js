@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     marginBottom: 20,
   },
+  
   sectionContainer: { marginBottom: 20 },
   sectionTitle: {
     fontSize: 20,

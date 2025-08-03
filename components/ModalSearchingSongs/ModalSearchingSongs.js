@@ -8,6 +8,7 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
+  ScrollView
 } from "react-native";
 import SearchInput from "../../components/input/searchInput";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -98,174 +99,197 @@ const ModalSearchingSong = ({songSelect}) => {
 
 
   const modal = () => {
-    return (
-      <Modal
-        visible={openModal2}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setOpenModal2(false)}
+  return (
+    <Modal
+      visible={openModal2}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => setOpenModal2(false)}
+    >
+      <View
+        style={{
+          width: "100%",
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0,0,0,0.5)",
+        }}
       >
         <View
           style={{
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
+            paddingTop: 20,
+            paddingHorizontal: 10,
+            backgroundColor: "white",
+            width: "90%",
+            height: "90%",
+            borderRadius: 20,
           }}
         >
+          {/* Encabezado con input */}
           <View
             style={{
-              paddingTop: 20,
-              paddingHorizontal: 10,
-              backgroundColor: "white",
-              width: "90%",
-              height: "90%",
-              borderRadius: 20,
+              flexDirection: "row",
+              width: "100%",
+              height: 80,
+              borderBottomWidth: 1,
+              borderBottomColor: "black",
+              marginBottom: 10,
             }}
           >
             <View
               style={{
-                flexDirection: "row",
-                width: "100%",
-                height: 80,
-                borderBottom: 1,
-                borderBottomColor: "black",
+                width: "15%",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <View
-                style={{
-                  width: "15%",
-                  height: "100%",
-                  justifyContent: "center",
-                }}
-              >
-                <TouchableOpacity onPress={() => setOpenModal2(false)}>
-                  <FontAwesome name="arrow-left" size={30} color="black" />
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ width: "85%", height: "100%" }}>
-                <SearchInput
-                  onSearch={searchSongs}
-                  categoryProp={categoryProp}
-                />
-              </View>
+              <TouchableOpacity onPress={() => setOpenModal2(false)}>
+                <FontAwesome name="arrow-left" size={30} color="black" />
+              </TouchableOpacity>
             </View>
 
-            <View>
-              {loading && <ActivityIndicator size="large" color="blue" />}
-
-              {results.length > 0 ? (
-                <FlatList
-                  data={results}
-                  keyExtractor={(item) => item.id.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("SearchingList", {
-                          query: item.name,
-                        })
-                      }
-                      style={{
-                        flexDirection: "row",
-                        padding: 10,
-                        alignItems: "center",
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "10%",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <FontAwesome name="search" size={13} color="black" />
-                      </View>
-                      <Text style={{ fontSize: 12, flex: 1 }}>{item.name}</Text>
-                      <View
-                        style={{
-                          width: "10%",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <FontAwesome5
-                          name="chevron-right"
-                          size={13}
-                          color="black"
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                />
-              ) : (
-                songs?.map((song) => {
-                  const isSelected = selectSongs.includes(song.id);
-
-                  return (
-                    <TouchableOpacity
-                      key={song.id}
-                      onPress={() => handleSelect(song.id)}
-                      style={{
-                        flexDirection: "row",
-                        padding: 10,
-                        alignItems: "center",
-                        backgroundColor: isSelected ? "#4caf50" : "#fff",
-                        borderRadius: 6,
-                        marginVertical: 3,
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "10%",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <FontAwesome
-                          name="music"
-                          size={13}
-                          color={isSelected ? "white" : "black"}
-                        />
-                      </View>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          flex: 1,
-                          color: isSelected ? "white" : "black",
-                        }}
-                      >
-                        {song.name}
-                      </Text>
-                      <View
-                        style={{
-                          width: "10%",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        {isSelected && (
-                          <FontAwesome5 name="check" size={13} color="white" />
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                    
-                  );
-                  
-                })
-              )}
-              <View style={{marginTop:20}}>
-                <TouchableOpacity onPress={() => { sendDataFather(), setOpenModal2(false) }}>
-                  <Text>Seleccionar Cancion</Text>      
-                </TouchableOpacity> 
-              </View>
+            <View style={{ width: "85%", justifyContent: "center" }}>
+              <SearchInput
+                onSearch={searchSongs}
+                categoryProp={categoryProp}
+              />
             </View>
           </View>
+
+          {/* Scroll del contenido y botón final */}
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ paddingBottom: 20 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {loading && (
+              <ActivityIndicator
+                size="large"
+                color="blue"
+                style={{ marginVertical: 20 }}
+              />
+            )}
+
+            {results.length > 0 ? (
+              results.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  onPress={() =>
+                    navigation.navigate("SearchingList", { query: item.name })
+                  }
+                  style={{
+                    flexDirection: "row",
+                    padding: 10,
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      width: "10%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <FontAwesome name="search" size={13} color="black" />
+                  </View>
+                  <Text style={{ fontSize: 12, flex: 1 }}>{item.name}</Text>
+                  <View
+                    style={{
+                      width: "10%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <FontAwesome5
+                      name="chevron-right"
+                      size={13}
+                      color="black"
+                    />
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              songs?.map((song) => {
+                const isSelected = selectSongs.includes(song.id);
+
+                return (
+                  <TouchableOpacity
+                    key={song.id}
+                    onPress={() => handleSelect(song.id)}
+                    style={{
+                      flexDirection: "row",
+                      padding: 10,
+                      alignItems: "center",
+                      backgroundColor: isSelected ? "#4caf50" : "#fff",
+                      borderRadius: 6,
+                      marginVertical: 3,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: "10%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <FontAwesome
+                        name="music"
+                        size={13}
+                        color={isSelected ? "white" : "black"}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        flex: 1,
+                        color: isSelected ? "white" : "black",
+                      }}
+                    >
+                      {song.name}
+                    </Text>
+                    <View
+                      style={{
+                        width: "10%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      {isSelected && (
+                        <FontAwesome5 name="check" size={13} color="white" />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                );
+              })
+            )}
+
+            
+          </ScrollView>
+          {/* Botón seleccionar canción */}
+            <View style={{ paddingVertical:10 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  sendDataFather();
+                  setOpenModal2(false);
+                }}
+                style={{
+                  backgroundColor: "#2196F3",
+                  paddingVertical: 10,
+                  borderRadius: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Seleccionar Canción
+                </Text>
+              </TouchableOpacity>
+            </View>
         </View>
-      </Modal>
-    );
-  };
+      </View>
+    </Modal>
+  );
+};
+
 
   return (
     <View>

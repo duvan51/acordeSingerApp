@@ -54,7 +54,6 @@ const CreateRepertorySongCat = ({groupId,  onRefresh}) => {
           Alert.alert("Error", "Algo salio mal");
         }
       };
-    
 
      
 

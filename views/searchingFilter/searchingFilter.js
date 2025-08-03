@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, Image, TouchableOpacity, FlatList, ScrollView, } from "react-native";
 import SearchInput from "../../components/input/searchInput";
 import { useNavigation } from "@react-navigation/native";
 
@@ -7,6 +7,7 @@ import { getCategories, getSongs } from "../../apis/api.js";
 
 import imageP from "../../assets/espiritu-santo.png";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 const SearchingFilter = () => {
   const [data, setData] = useState({});
@@ -41,7 +42,7 @@ const SearchingFilter = () => {
   
 
   return (
-    <View style={{ fontSize: 17, paddingTop: 20, paddingHorizontal: 10 }}>
+    <View style={{ fontSize: 17, paddingTop: 20, paddingHorizontal: 10, paddingBottom:160 }}>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("SearchingLive", { categoryProp: category })
@@ -51,7 +52,7 @@ const SearchingFilter = () => {
       </TouchableOpacity>
 
       {/**categorias */}
-      <View>
+      <ScrollView>
         <Text style={{ 
           fontSize: 12, 
           fontWeight: "800", 
@@ -127,7 +128,8 @@ const SearchingFilter = () => {
         <View style={{
           marginTop: 20,
           borderTopWidth: 2, 
-          borderTopColor: '#ffffff'
+          borderTopColor: '#ffffff',
+          paddingBottom:30
         }}>
           <View>
             <Text style={{ 
@@ -150,6 +152,7 @@ const SearchingFilter = () => {
                     borderBottomWidth: 1,
                     borderBottomColor: "#ddd",
                     flexDirection: "row",
+                    height:60
                   }}
                 >
                   <View style={{ width: "80%" }}>
@@ -192,7 +195,7 @@ const SearchingFilter = () => {
             )}
           />
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

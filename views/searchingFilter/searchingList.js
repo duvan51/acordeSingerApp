@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, ScrollView } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import SearchInput from "../../components/input/searchInput";
@@ -46,7 +46,7 @@ const SearchingList = () => {
           width: "100%", 
           height: 80,
           borderBottom:1,
-          borderBottomColor:"black"
+          borderBottomColor: "#e0e0e0"
           }}>
         <View
           style={{
@@ -65,7 +65,7 @@ const SearchingList = () => {
         </TouchableOpacity >
       </View>
 
-      <View>
+      <ScrollView>
       {loading ? (
         <ActivityIndicator size="large" color="blue" />
       ) : songs.length > 0 ? (
@@ -104,7 +104,7 @@ const SearchingList = () => {
       ) : (
         <Text>No se encontraron más resultados.</Text>
       )}
-      </View>
+      </ScrollView>
 
 
 

@@ -23,6 +23,7 @@ const SongView = ({ navigation }) => {
   const route = useRoute();
   const { songId } = route.params || {};
 
+  const [zoom, setZoom] = useState(1);
   const [data, setData] = useState({});
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -106,54 +107,75 @@ const SongView = ({ navigation }) => {
     }
   };
 
-  const Transport = (modo) => {
-    if (!data?.song) return;
+const Transport = (modo) => {
+  if (!data?.song) return;
 
-    const acorde = [
-      "C",
-      "C#",
-      "D",
-      "D#",
-      "E",
-      "F",
-      "F#",
-      "G",
-      "G#",
-      "A",
-      "A#",
-      "B",
-    ];
+  const acordesBase = [
+    "C", "C#", "D", "D#", "E",
+    "F", "F#", "G", "G#", "A", "A#", "B"
+  ];
 
-    // Función para transponer acordes
-    const transponerAcorde = (x) => {
-      const index = acorde.indexOf(x);
-      if (index === -1) return x; // Si el acorde no se encuentra, lo dejamos igual
+  const separarRaizYSufijo = (acorde) => {
+    if (typeof acorde !== "string") return { raiz: "", sufijo: "" };
 
-      if (modo === "subir") {
-        return acorde[(index + 1) % acorde.length];
-      } else if (modo === "bajar") {
-        return index === 0 ? acorde[acorde.length - 1] : acorde[index - 1];
+    // Ordenar acordes de mayor a menor longitud para evitar errores con C vs C#
+    const ordenados = [...acordesBase].sort((a, b) => b.length - a.length);
+
+    for (let base of ordenados) {
+      if (acorde.startsWith(base)) {
+        return {
+          raiz: base,
+          sufijo: acorde.slice(base.length), // lo que sigue del acorde
+        };
       }
+    }
 
-      return x; // Por si no entra en ninguna condición
-    };
-
-    // Crear una copia profunda de los datos
-    const newData = JSON.parse(JSON.stringify(data));
-
-    // Iterar sobre cada sección y línea para modificar los acordes
-    newData.song.forEach((section) => {
-      section.lyrics.forEach((line) => {
-        if (line.chords) {
-          Object.keys(line.chords).forEach((wordIndex) => {
-            line.chords[wordIndex] = transponerAcorde(line.chords[wordIndex]);
-          });
-        }
-      });
-    });
-
-    setData(newData);
+    return { raiz: "", sufijo: "" };
   };
+
+  const transponerAcorde = (acordeOriginal) => {
+    if (!acordeOriginal || typeof acordeOriginal !== "string") return acordeOriginal;
+
+    const { raiz, sufijo } = separarRaizYSufijo(acordeOriginal);
+    const index = acordesBase.indexOf(raiz);
+
+    if (index === -1 || raiz === "") return acordeOriginal; // no transpone si no es válido
+
+    let nuevoIndice;
+    if (modo === "subir") {
+      nuevoIndice = (index + 1) % acordesBase.length;
+    } else if (modo === "bajar") {
+      nuevoIndice = (index - 1 + acordesBase.length) % acordesBase.length;
+    } else {
+      return acordeOriginal;
+    }
+
+    return acordesBase[nuevoIndice] + sufijo;
+  };
+
+  const newData = JSON.parse(JSON.stringify(data));
+
+  newData.song.forEach((section) => {
+    section.lyrics.forEach((line) => {
+      if (line.chords) {
+        Object.keys(line.chords).forEach((wordIndex) => {
+          const acorde = line.chords[wordIndex];
+          const nuevo = transponerAcorde(acorde);
+
+          // Solo actualiza si es diferente y válido
+          if (typeof nuevo === "string" && nuevo.trim() !== "") {
+            line.chords[wordIndex] = nuevo;
+          }
+        });
+      }
+    });
+  });
+
+  setData(newData);
+};
+
+
+
 
   const addCategories = (id) => {
     if (selectedCategories.includes(id)) {
@@ -178,55 +200,70 @@ const SongView = ({ navigation }) => {
         <Text style={styles.title}>{data.name}</Text>
         <Text style={styles.artist}>{data.autor}</Text>
 
-        {data?.song?.map((section, sectionIndex) => (
-          <View key={sectionIndex} style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>{section.type}</Text>
+        <ScrollView
+          horizontal={false}
+          contentContainerStyle={{
+            alignItems: "flex-start",
+            minHeight: "100%",
+          }}
+        >
+          <View
+            style={{
+              transform: [{ scale: zoom }],
+              transformOrigin: "top left",
+              alignSelf: "flex-start",
+            }}
+          >
+            {data?.song?.map((section, sectionIndex) => (
+              <View key={sectionIndex} style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>{section.type}</Text>
 
-            {section.lyrics.map((line, lineIndex) => {
-              const characters = line.text.split(""); // Separa todo, incluyendo espacios
-              return (
-                <View key={lineIndex} style={styles.lineContainer}>
-                  {/* Línea de acordes (alineada con caracteres, incluyendo espacios) */}
-                  <View style={styles.chordsRow}>
-                    {characters.map((char, charIndex) => (
-                      <TouchableOpacity
-                        key={charIndex}
-                        onPress={() =>
-                          addChord(sectionIndex, lineIndex, charIndex)
-                        }
-                        style={{
-                          minWidth: char === " " ? 8 : 10, // Espacios más pequeños para mejor alineación
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text style={styles.chord}>
-                          {line.chords?.[charIndex] || " "}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
+                {section.lyrics.map((line, lineIndex) => {
+                  const characters = line.text.split("");
+                  return (
+                    <View key={lineIndex} style={styles.lineContainer}>
+                      <View style={styles.chordsRow}>
+                        {characters.map((char, charIndex) => (
+                          <TouchableOpacity
+                            key={charIndex}
+                            onPress={() =>
+                              addChord(sectionIndex, lineIndex, charIndex)
+                            }
+                            style={{
+                              minWidth: char === " " ? 7 : 8,
+                              alignItems: "center",
+                            }}
+                          >
+                            <Text style={styles.chord}>
+                              {line.chords?.[charIndex] || " "}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
 
-                  {/* Línea de texto (incluyendo espacios) */}
-                  <View style={styles.lyricsRow}>
-                    {characters.map((char, charIndex) => (
-                      <TouchableOpacity
-                        key={charIndex}
-                        onPress={() =>
-                          addChord(sectionIndex, lineIndex, charIndex)
-                        }
-                      >
-                        <Text style={char === " " ? styles.space : styles.word}>
-                          {char}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-              );
-            })}
+                      <View style={styles.lyricsRow}>
+                        {characters.map((char, charIndex) => (
+                          <TouchableOpacity
+                            key={charIndex}
+                            onPress={() =>
+                              addChord(sectionIndex, lineIndex, charIndex)
+                            }
+                          >
+                            <Text
+                              style={char === " " ? styles.space : styles.word}
+                            >
+                              {char}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            ))}
           </View>
-        ))}
-
+        </ScrollView>
         {/* Modal para ingresar acorde */}
         <Modal
           visible={modalVisible}
