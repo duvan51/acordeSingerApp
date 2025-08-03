@@ -80,9 +80,11 @@ function MainTab(){
         iconName = 'cogs';
       } else if (route.name === 'Settings') {
         iconName = 'user'; // Puedes cambiar este ícono también
-      } else if (route.name === 'Login') {
-        iconName = 'sign-in';
+      } else if (route.name === "Login"){
+              iconName= "circle-user";
       }
+      
+      
 
       return <FontAwesome name={iconName} size={35} color={color} />;
     },
@@ -109,7 +111,7 @@ function MainTab(){
   <Tab.Screen name="SearchingFilter" component={SearchingFilter} />
   <Tab.Screen name="ViewGroups" component={ViewGroups} />
   <Tab.Screen name="Settings" component={CreateUser} />
-  <Tab.Screen name="ViewGroupId" component={ViewGroupId} />
+  <Tab.Screen name="Login" component={Login} />
 </Tab.Navigator>
     
   )

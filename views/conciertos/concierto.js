@@ -206,55 +206,58 @@ const ConviertoSongViewId = ({ navigation }) => {
             />
           </View>
 
-          
-{/* Segundo listado */}
-<View style={styles.listBarWhite}>
-  <View style={[styles.listRow, { flex: 1, flexDirection: "row", alignItems: "center" }]}>
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ flexDirection: "row", alignItems: "center" }}
-      style={{ flex: 1 }}
-    >
-      {dataCustomSong?.custom_songs?.map((z) => (
-        <TouchableOpacity
-          key={z.original_song_id}
-          onPress={() => {
-            setVersionesCustomSong(z?.versiones ?? []);
-            setSecondtList(z.original_song_id);
-          }}
-          style={[
-            styles.listBtnWhite,
-            selectSecondtList === z.original_song_id &&
-              styles.listBtnWhiteActive,
-          ]}
-        >
-          <Text
-            style={[
-              styles.listBtnWhiteText,
-              selectSecondtList === z.original_song_id &&
-                styles.listBtnWhiteTextActive,
-            ]}
-          >
-            <NameOriginal x={z.original_song_id} />
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+          {/* Segundo listado */}
+          <View style={styles.listBarWhite}>
+            <View
+              style={[
+                styles.listRow,
+                { flex: 1, flexDirection: "row", alignItems: "center" },
+              ]}
+            >
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+                style={{ flex: 1 }}
+              >
+                {dataCustomSong?.custom_songs?.map((z) => (
+                  <TouchableOpacity
+                    key={z.original_song_id}
+                    onPress={() => {
+                      setVersionesCustomSong(z?.versiones ?? []);
+                      setSecondtList(z.original_song_id);
+                    }}
+                    style={[
+                      styles.listBtnWhite,
+                      selectSecondtList === z.original_song_id &&
+                        styles.listBtnWhiteActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.listBtnWhiteText,
+                        selectSecondtList === z.original_song_id &&
+                          styles.listBtnWhiteTextActive,
+                      ]}
+                    >
+                      <NameOriginal x={z.original_song_id} />
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
 
-    {/* Botón fuera del Scroll pero en la misma línea */}
-    <TouchableOpacity
-      onPress={() => navigation.goBack()}
-      style={[styles.listBtnWhite, { marginLeft: 10 }]}
-    >
-      <ModalSearchingSong songSelect={handlSongOfModal} />
-    </TouchableOpacity>
-  </View>
-</View>
-
-
-
-
+              {/* Botón fuera del Scroll pero en la misma línea */}
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={[styles.listBtnWhite, { marginLeft: 10 }]}
+              >
+                <ModalSearchingSong songSelect={handlSongOfModal} />
+              </TouchableOpacity>
+            </View>
+          </View>
 
           {/* Tercer listado */}
           <View style={{ padding: 10, width: "100%" }}>

@@ -168,6 +168,8 @@ export default function Home({ navigation }) {
             <CardSongOne />
           </View>
 
+
+          {/* categorias */}
           <View style={{ marginTop: 20, width: "100%" }}>
             <View>
               <View style={{ paddingHorizontal: 10 }}>

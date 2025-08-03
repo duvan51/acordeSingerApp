@@ -148,7 +148,7 @@ const [request, response, promptAsync] = Google.useAuthRequest({
             
           
           }}>
-            <Text style={styles.buttonText}>Iniciar Sesion Con Google</Text>
+            <Text style={styles.buttonText}>Continuar con Google</Text>
           </View>   
         </TouchableOpacity>
       ) : (

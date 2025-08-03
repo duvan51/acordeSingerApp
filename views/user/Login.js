@@ -87,6 +87,12 @@ const Login = () => {
                 </TouchableOpacity>
 
                 <LoginGoogle />
+                <TouchableOpacity onPress={() => navigation.navigate('CreateUser')}>
+                    <Text style={{ color: '#007AFF', marginTop: 20, textAlign: 'center' }}>
+                        ¿No tienes cuenta? Regístrate
+                    </Text>
+                </TouchableOpacity>
+
             </SafeAreaView>
         </SafeAreaProvider>
     );

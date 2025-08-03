@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import Login from '../../views/user/Login';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -21,8 +23,8 @@ export default function App() {
               iconName = 'home-outline';
             } else if (route.name === 'Profile') {
               iconName = 'person-outline';
-            } else if (route.name === 'Settings') {
-              iconName = 'settings-outline';
+            }else if (route.name === "Login"){
+              iconName= "person-outline";
             }
             
 
@@ -35,7 +37,8 @@ export default function App() {
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen name="Login" component={Login} />
+
       </Tab.Navigator>
     </NavigationContainer>
   );

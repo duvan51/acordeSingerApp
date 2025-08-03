@@ -17,7 +17,7 @@ const CloudPhp = "https://api.musikoord.com/api";
 export const getSongs = async () => {
   try {
     const response = await axios.get(`${CloudPhp}/songs`);
-    // console.log("res=>:", response.data);
+   //  console.log("res=>:", response.data);
     return response.data; // Retorna la respuesta si necesitas manejarla en otro lugar
   } catch (error) {
     console.error("error al obtener canciones:", error);
